@@ -4,7 +4,7 @@ public class montecarlo extends Thread {
 	private int inicio;
 	private int fim;
 	private double factor;
-    static int numSteps = 10000;
+    static int numSteps = 10000000;
     int sum = 0 ;
     int begin, end ;
     public montecarlo( int inicio, int fim ) {
@@ -17,9 +17,9 @@ public class montecarlo extends Thread {
  		// TODO Auto-generated constructor stub
  	}
 	public void run() {
-		 for(long i =inicio;i<fim;i++){
-			sum = getPi(inicio,fim,sum);
-		 }
+		
+			sum = getPi(inicio,fim);
+		 
 	}
     
 	public static void main(String[] args) throws Exception{
@@ -46,12 +46,12 @@ public class montecarlo extends Thread {
 				
 			}
 		
-			montecarlo t = new montecarlo( (numprocessadores-1)*bloco, numSteps-1 );
+		//	montecarlo t = new montecarlo( (numprocessadores-1)*bloco, numSteps-1 );
 		//	t.start();
-	//		listathreads[numprocessadores-1] = t;
+		//	listathreads[numprocessadores-1] = t;
 		
 			
-			for (int i=0; i<numprocessadores-2; i++){
+			for (int i=0; i<numprocessadores; i++){
 		
 				supersum += listathreads[i].sum;
 				
@@ -73,8 +73,8 @@ public class montecarlo extends Thread {
 	}
 
 
-public static int getPi(int begin, int end, int inCircle){
-	//int inCircle = 0 ;
+public static int getPi(int begin, int end){
+	int inCircle = 0 ;
 	for(int i= begin;i < end;i++){
 		//a square with a side of length 2 centered at 0 has 
 		//x and y range of -1 to 1
