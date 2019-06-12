@@ -1,10 +1,12 @@
+import java.util.Scanner;
+
 //GREGORY LEBINZ method
 public class lebinzconcorrente extends Thread {
 
 	private long inicio;
 	private long fim;
 	private double factor;
-    static int numSteps = 10000;
+    static int numSteps = 10000000;
 
     double sum ;
     int begin, end ;
@@ -50,42 +52,21 @@ public class lebinzconcorrente extends Thread {
 	public static void main(String[] args) throws Exception {
 		  long startTime = System.currentTimeMillis();
 		  int numprocessadores = Runtime.getRuntime().availableProcessors();
-/*
-		  tryconcorrente1 thread1 = new tryconcorrente1();
-	        thread1.begin = 0 ;
-	        thread1.end = numSteps / 4 ;
-
-	        tryconcorrente1 thread2 = new tryconcorrente1();
-	        thread2.begin = numSteps / 4 ;
-	        thread2.end =  numSteps  / 2 ;
-
-	        tryconcorrente1 thread3 = new tryconcorrente1();
-	        thread3.begin = numSteps / 2 ;
-	        thread3.end = 3 * numSteps / 4 ;
-
-	        tryconcorrente1 thread4 = new tryconcorrente1();
-	        thread4.begin = 3 * numSteps / 4 ;
-	        thread4.end = numSteps ;
-
-	        thread1.start();
-	        thread2.start();
-	        thread3.start();
-	        thread4.start();
-
-	        thread1.join();
-	        thread2.join();
-	        thread3.join();
-	        thread4.join();
-
-		*/  
+ 
 		  double supersum=0;
 	
 		  
-			int bloco = numSteps / numprocessadores +1;
+			
 			
 			lebinzconcorrente[] listathreads = new lebinzconcorrente[numprocessadores];
+			 Scanner reader = new Scanner(System.in);  // Reading from System.in
+			 System.out.println("Enter the number of iterations: ");
+			 int n = reader.nextInt(); // Scans the next token of the input as an int.
+			 //once finished
+			 reader.close();
+			 int bloco = n / numprocessadores;
 			
-			for (int i=1; i<numprocessadores; i++) {
+			for (int i=1; i<numprocessadores+1; i++) {
 				int primeiro = (i-1)*bloco;
 				int ultimo = (i)*bloco;
 							
@@ -100,23 +81,12 @@ public class lebinzconcorrente extends Thread {
 				
 			}
 		
-			lebinzconcorrente t = new lebinzconcorrente( (numprocessadores-1)*bloco, numSteps-1 );
-		//	t.start();
-			listathreads[numprocessadores-1] = t;
-		
-		
-				
-			
-			for (int i=0; i<numprocessadores; i++){
-		
-				supersum += listathreads[i].sum;
-				
-				listathreads[i].join();
-			}
-			
 	
-	 
-	 //       supersum =thread1.sum + thread2.sum +thread3.sum +thread4.sum ;
+			for (int i=0; i<listathreads.length; i++){				
+				listathreads[i].join();
+				supersum += listathreads[i].sum;
+			}
+
 	        long endTime = System.currentTimeMillis();
 	   
 	        double pi = 4*(supersum) ;

@@ -9,7 +9,7 @@ public class montecarlos
 	
     public static void main(String[] args) throws Exception {
 
-    	long inicio = System.nanoTime(); 
+    	long inicio =   System.currentTimeMillis();
 
         int nThrows = 10000000;
 
@@ -20,10 +20,11 @@ public class montecarlos
 
 
         System.out.println("PI estimate = "+ PI);
-		long fim = System.nanoTime(); 
-		
-		System.out.println("Calculo demorou (secs): "  
-			    + String.format("%.6f", (fim-inicio)/1.0e9) );
+		long fim =  System.currentTimeMillis();
+	
+		  System.out.println("Calculated in " +
+	                ((fim - inicio)) + " milliseconds");
+
     }
 
    

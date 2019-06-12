@@ -20,19 +20,7 @@ public class montecarlo extends Thread {
 	public void run() {
 		
 
-	    double rand1 = (Math.random() * 2) - 1; 
-	    double rand2 = (Math.random() * 2) - 1;
-		for(int i=inicio;i < fim;i++){
-		
-			double randX= ((Math.random() * 2) - 1);//range -1 to 1
-			double randY= ((Math.random() * 2) - 1);//range -1 to 1
-			//distance from (0,0) = sqrt((x-0)^2+(y-0)^2)
-			double distt=	Math.sqrt(randX * randX + randY * randY);
-			//double dist= Math.hypot(randX, randY);
-			if(distt <= 1){//circle with diameter of 2 has radius of 1
-				sum++;
-			}
-		}
+	sum = getPi(inicio,fim);
 		 
 	}
     
@@ -78,7 +66,7 @@ public class montecarlo extends Thread {
 		//	supersum=listathreads[numprocessadores-1].sum;
 	 
 	 //       supersum =thread1.sum + thread2.sum +thread3.sum +thread4.sum ;
-	//		supersum=listathreads[0].sum +listathreads[1].sum+listathreads[2].sum+listathreads[3].sum;
+			supersum=listathreads[0].sum +listathreads[1].sum+listathreads[2].sum+listathreads[3].sum;
 	        long endTime = System.currentTimeMillis();
 
 	       double pi = (4.0 *(double)( supersum/numSteps));
@@ -94,14 +82,14 @@ public class montecarlo extends Thread {
 public static int getPi(int begin, int end){
 	int inCircle = 0 ;
 	//Random ran = new Random(); 
-    double rand1 = Math.random(); 
+
 	//double rand2	=	((Math.random()* 2) - 1);
 	//double dist= Math.sqrt(rand1 * rand1 + rand2 * rand2);
 	for(int i= begin;i < end;i++){
 		//a square with a side of length 2 centered at 0 has 
 		//x and y range of -1 to 1
-		double randX= (rand1);//range -1 to 1
-		double randY= (rand1);//range -1 to 1
+		double randX= ((Math.random()* 2) - 1);//range -1 to 1
+		double randY= ((Math.random()* 2) - 1);//range -1 to 1
 		//distance from (0,0) = sqrt((x-0)^2+(y-0)^2)
 		double distt=	Math.sqrt(randX * randX + randY * randY);
 		//double dist= Math.hypot(randX, randY);
