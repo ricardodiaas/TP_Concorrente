@@ -12,21 +12,17 @@ public class montecarlos
 
     
 
-       // int nThrows = 10000000;
-    	 Scanner reader = new Scanner(System.in);  // Reading from System.in
+
+    	 Scanner reader = new Scanner(System.in);  
 		 System.out.println("Enter the number of iterations: ");
-		 long nThrows = reader.nextLong(); // Scans the next token of the input as an int.
-		 //once finished
+		 long nThrows = reader.nextLong(); 
+
 		 reader.close();
-			long inicio = System.nanoTime(); 
-     //   double PI= calculatePi(nThrows);
+		 
+		long inicio = System.nanoTime(); 
         double l = getPi(nThrows);
-        double PI = 4.0 *( l / nThrows);
- 
-
-
-     
-   	 long fim = System.nanoTime(); 
+        double PI = 4.0 *( l / nThrows); 
+   	 	long fim = System.nanoTime(); 
 	
 		double realpi = Math.PI;
 		double error = (PI-realpi)/realpi*100;
@@ -45,15 +41,11 @@ public class montecarlos
 public static double getPi(long numThrows){
 		int inCircle= 0;
 		for(int i= 0;i < numThrows;i++){
-			//a square with a side of length 2 centered at 0 has 
-			//x and y range of -1 to 1
+
 			double randX= (Math.random());//range -1 to 1
 			double randY= (Math.random());//range -1 to 1
-			//distance from (0,0) = sqrt((x-0)^2+(y-0)^2)
-			double dist= Math.sqrt(randX * randX + randY * randY);
-			//double dist= Math.hypot(randX, randY);
-			
-			if(dist <= 1){//circle with diameter of 2 has radius of 1
+		
+			if(randX * randX + randY * randY <= 1){
 				inCircle++;
 			}
 		}

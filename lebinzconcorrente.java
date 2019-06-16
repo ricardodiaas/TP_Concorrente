@@ -28,22 +28,25 @@ public class lebinzconcorrente extends Thread {
 
 	public void run() {
 
-        sum = 0.0 ;
-
-        synchronized(this){ 
-     for(long i = begin;i<end;i++){
+        lock.lock();
+		sum = 0.0 ;
+	    try {	
+	    	for(long i = begin;i<end;i++){
         	if(!isPar(i)){
 				factor=-1.0;
 			}else{
 				factor=1.0;
 			}
         	sum+=factor/(2*i+1);
-        	
-        	
-        
         }
-     total +=sum;
+	    	total +=sum;
+        }catch(Exception e) {
+	    	System.out.println(e.toString());
+        }finally{	
+        	lock.unlock();
         }
+	
+	
     }
     public static boolean isPar(long number)
 	{ 

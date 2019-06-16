@@ -20,16 +20,13 @@ public class lebinzsequencial {
 		//1long n = 100000000;
 	
 		for(k=0;k<n;k++){
-		
 			if(!isPar(k)){
 				factor=-1.0;
 			}else{
 				factor=1.0;
 			}
-			
 			sum+=factor/(2*k+1);
-			//factor=-factor;
-		
+			//factor=-factor;	
 		}
 	double pi;
 			pi =4.0*sum;

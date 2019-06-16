@@ -10,7 +10,7 @@ public class montecarlolock extends Thread{
 
 		private long inicio;
 		private long fim;
-		long ini,fini;
+
 		private double factor;
 private static double total=0;
 	 
@@ -22,33 +22,25 @@ private static double total=0;
 	    public montecarlolock( int inicio, int fim ) {
 	 		this.inicio = inicio;
 	 		this.fim = fim;
-	 		System.out.println("bloco: " + inicio +"," + fim+ "this is my sum:"+sum);
+	 	
 	 	}
 
 	     public montecarlolock() {
-	 		// TODO Auto-generated constructor stub
+	 
 	 	}
 		public void run() {
-	    
-		
+	
 			  lock.lock();
-			    try {
-			    	//  ini = System.nanoTime(); 
+			    try {		 
 				         Random prng = new Random ();
-				    	  	for(long i= inicio;i <fim;i++){
-				    	  //		total = 0;    
-								double randX=prng.nextDouble();//Math.random();// (float) ((Math.random()* 2) - 1);//range -1 to 1
-								double randY=prng.nextDouble();//Math.random();// (float)((Math.random()* 2) - 1);//range -1 to 1
-						
-								if(randX * randX + randY * randY <= 1.0){//circle with diameter of 2 has radius of 1
+				    	  	for(long i= inicio;i <fim;i++){				
+								double randX=prng.nextDouble();
+								double randY=prng.nextDouble();
+								if(randX * randX + randY * randY <= 1.0){
 									sum++;
-								}
-								
+								}								
 							}      
 				                total += sum;
-							//	fini = System.nanoTime(); 
-								//	System.out.println("Calculo da thread "+Thread.currentThread().getName()+"é de (secs): "  
-										//    + String.format("%.6f", (fini-ini)/1.0e9) );
 			    }catch(Exception e) {
 			    	System.out.println(e.toString());
 			    } 
@@ -100,24 +92,15 @@ private static double total=0;
 			
 				
 				for (int i=0; i<listathreads.length; i++){
-			
-				//	supersum += listathreads[i].sum;
-				
-					
-					listathreads[i].join();
-					//	supersum += listathreads[i].sum;
+					listathreads[i].join();				
 				}
 				
-		       
-		    double kkk = total;
-   		
-   			System.out.print("XXX:"+total+"\n");
-   	
+
 		     double pi = (4.0 *(double)( total/n));
-		  //   double pii = (4.0*(double)(total/n));
+	
 		
 		     long fim = System.nanoTime();
-		        //System.out.print(supersum+"\n");
+		     
 		   		double realpi = Math.PI;
 		   		double error = (pi-realpi)/realpi*100;
 		   	 System.out.println("Foram criadas "+listathreads.length+" threads");
