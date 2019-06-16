@@ -1,4 +1,5 @@
 import java.util.Date;
+import java.util.Random;
 import java.util.Scanner;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -7,15 +8,17 @@ public class montecarlolock extends Thread{
 
 	
 
-		private int inicio;
-		private int fim;
+		private long inicio;
+		private long fim;
+		long ini,fini;
 		private double factor;
-		ReentrantLock re; 
+private static double total=0;
+	 
 		 Lock lock = new ReentrantLock();	
 	    static int numSteps =	10000000;
 	    int sum = 0;
 	    
-	    int begin, end ;
+	    long begin, end ;
 	    public montecarlolock( int inicio, int fim ) {
 	 		this.inicio = inicio;
 	 		this.fim = fim;
@@ -26,48 +29,62 @@ public class montecarlolock extends Thread{
 	 		// TODO Auto-generated constructor stub
 	 	}
 		public void run() {
-	    /*
-			lock.lock();
-		    try
-		      {
-		         Long duration = (long) (1000);
-		         System.out.println(Thread.currentThread().getName() + ": PrintQueue: Printing a Job during " + (duration) + " milliseconds :: Time - " + new Date());
-		         Thread.sleep(duration);
-		      } catch (InterruptedException e)
-		      {
-		         e.printStackTrace();
-		      } finally
-		      {
-			    	sum = getPi(inicio,fim);
-				    lock.unlock();
-		      }
+	    
+		
+			  lock.lock();
+			    try {
+			    	//  ini = System.nanoTime(); 
+				         Random prng = new Random ();
+				    	  	for(long i= inicio;i <fim;i++){
+				    	  //		total = 0;    
+								double randX=prng.nextDouble();//Math.random();// (float) ((Math.random()* 2) - 1);//range -1 to 1
+								double randY=prng.nextDouble();//Math.random();// (float)((Math.random()* 2) - 1);//range -1 to 1
+						
+								if(randX * randX + randY * randY <= 1.0){//circle with diameter of 2 has radius of 1
+									sum++;
+								}
+								
+							}      
+				                total += sum;
+							//	fini = System.nanoTime(); 
+								//	System.out.println("Calculo da thread "+Thread.currentThread().getName()+"é de (secs): "  
+										//    + String.format("%.6f", (fini-ini)/1.0e9) );
+			    }catch(Exception e) {
+			    	System.out.println(e.toString());
+			    } 
+			    finally {
+			        lock.unlock();
+			    }
 				
-*/
-			sum = getPi(inicio,fim);
-
-			
-			 
+		      
+		
+			 		 
 		}
 	    
 		public static void main(String[] args) throws Exception{
-			 int numprocessadores = Runtime.getRuntime().availableProcessors();
-			  long startTime = System.currentTimeMillis();
-			  double supersum=0;
-		
-			  
-			
-				
-			 montecarlolock[] listathreads = new montecarlolock[numprocessadores];
+			 int numprocess = Runtime.getRuntime().availableProcessors();
+			 System.out.println("numero de nucleos disponiveis: "+numprocess+"\n");
 			 Scanner reader = new Scanner(System.in);  // Reading from System.in
-			 System.out.println("Enter the number of iterations: ");
-			 int n = reader.nextInt(); // Scans the next token of the input as an int.
+			 System.out.println("Indique numero de threads que deseja criar: \n");
+			int numprocessadores = reader.nextInt(); // Scans the next token of the input as an int.
+			 //once finished
+			 reader.nextLine();
+			// reader.close();
+			 
+						
+			 montecarlolock[] listathreads = new montecarlolock[numprocessadores];
+			
+			 // reader = new Scanner(System.in);  // Reading from System.in
+			 System.out.println("Indique o numero de pontos de a gerar: ");
+			 long n = reader.nextLong(); // Scans the next token of the input as an int.
 			 //once finished
 			 reader.close();
-			 int bloco = n / numprocessadores;
+			 long inicio = System.nanoTime(); 
+			 long bloco = n / numprocessadores;
 			 
 				for (int i=1; i<numprocessadores+1; i++) {
-					int primeiro = (i-1)*bloco;
-					int ultimo = (i)*bloco;
+					long primeiro = (i-1)*bloco;
+					long ultimo = (i)*bloco;
 								
 					montecarlolock t = new montecarlolock();
 					t.inicio=primeiro;
@@ -88,42 +105,28 @@ public class montecarlolock extends Thread{
 				
 					
 					listathreads[i].join();
-						supersum += listathreads[i].sum;
+					//	supersum += listathreads[i].sum;
 				}
 				
-		        long endTime = System.currentTimeMillis();
-
-		       double pi = (4.0 *(double)( supersum/n));
-
-		        System.out.println("Value of pi: " + pi);
-
-		        System.out.println("Calculated in " +
-		                ((endTime - startTime)) + " milliseconds");
-
+		       
+		    double kkk = total;
+   		
+   			System.out.print("XXX:"+total+"\n");
+   	
+		     double pi = (4.0 *(double)( total/n));
+		  //   double pii = (4.0*(double)(total/n));
+		
+		     long fim = System.nanoTime();
+		        //System.out.print(supersum+"\n");
+		   		double realpi = Math.PI;
+		   		double error = (pi-realpi)/realpi*100;
+		   	 System.out.println("Foram criadas "+listathreads.length+" threads");
+		   			System.out.print("valor real de pi:"+realpi+"\n");
+		   		System.out.print("meu valor de pi:"+pi+"\n");
+		   		System.out.print("erro:"+error+"\n");
+		   		System.out.println("Calculo demorou (secs): "  
+		   			    + String.format("%.6f", (fim-inicio)/1.0e9) );
 		}
 
 
-		public  synchronized int getPi(int begin, int end){
-			int inCircle = 0 ;
-			//Random ran = new Random(); 
-
-			//double rand2	=	((Math.random()* 2) - 1);
-			//double dist= Math.sqrt(rand1 * rand1 + rand2 * rand2);
-			for(int i= begin;i < end;i++){
-				//a square with a side of length 2 centered at 0 has 
-				//x and y range of -1 to 1
-				double randX= ((Math.random()* 2) - 1);//range -1 to 1
-				double randY= ((Math.random()* 2) - 1);//range -1 to 1
-				//distance from (0,0) = sqrt((x-0)^2+(y-0)^2)
-				double distt=	Math.sqrt(randX * randX + randY * randY);
-				//double dist= Math.hypot(randX, randY);
-				if(distt <= 1){//circle with diameter of 2 has radius of 1
-					inCircle++;
-				}
-			}
-			return inCircle;
-		}
-		}
-
-
-
+}

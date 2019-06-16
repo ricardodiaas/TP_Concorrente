@@ -1,4 +1,6 @@
 import java.util.Scanner;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 //GREGORY LEBINZ method
 public class lebinzconcorrente extends Thread {
@@ -6,10 +8,12 @@ public class lebinzconcorrente extends Thread {
 	private long inicio;
 	private long fim;
 	private double factor;
-    static int numSteps = 10000000;
+
+    private static double total=0;
+    Lock lock = new ReentrantLock();	
 
     double sum ;
-    int begin, end ;
+    long begin, end ;
   
     public lebinzconcorrente( int inicio, int fim ) {
 		this.inicio = inicio;
@@ -26,8 +30,7 @@ public class lebinzconcorrente extends Thread {
 
         sum = 0.0 ;
 
-     
-    //    for(long i = inicio+1 ; i < fim ; i++){
+        synchronized(this){ 
      for(long i = begin;i<end;i++){
         	if(!isPar(i)){
 				factor=-1.0;
@@ -35,7 +38,11 @@ public class lebinzconcorrente extends Thread {
 				factor=1.0;
 			}
         	sum+=factor/(2*i+1);
+        	
+        	
         
+        }
+     total +=sum;
         }
     }
     public static boolean isPar(long number)
@@ -50,25 +57,29 @@ public class lebinzconcorrente extends Thread {
 
 	
 	public static void main(String[] args) throws Exception {
-		  long startTime = System.currentTimeMillis();
-		  int numprocessadores = Runtime.getRuntime().availableProcessors();
- 
-		  double supersum=0;
-	
+		
+		  int numprocess = Runtime.getRuntime().availableProcessors();
+		  System.out.println("numero de nucleos disponiveis: "+numprocess+"\n");
+			 Scanner reader = new Scanner(System.in);  // Reading from System.in
+			 System.out.println("Indique numero de threads que deseja criar: \n");
+			int numprocessadores = reader.nextInt(); // Scans the next token of the input as an int.
+			 //once finished
+			 reader.nextLine();
+			// reader.close();
 		  
 			
 			
 			lebinzconcorrente[] listathreads = new lebinzconcorrente[numprocessadores];
-			 Scanner reader = new Scanner(System.in);  // Reading from System.in
-			 System.out.println("Enter the number of iterations: ");
-			 int n = reader.nextInt(); // Scans the next token of the input as an int.
+			 System.out.println("Indique o numero de Iterações: ");
+			 long n = reader.nextLong(); // Scans the next token of the input as an int.
 			 //once finished
 			 reader.close();
-			 int bloco = n / numprocessadores;
+			 long inicio = System.nanoTime(); 
+			 long bloco = n / numprocessadores;
 			
 			for (int i=1; i<numprocessadores+1; i++) {
-				int primeiro = (i-1)*bloco;
-				int ultimo = (i)*bloco;
+				long primeiro = (i-1)*bloco;
+				long ultimo = (i)*bloco;
 							
 				lebinzconcorrente t = new lebinzconcorrente();
 				t.begin=primeiro;
@@ -84,17 +95,21 @@ public class lebinzconcorrente extends Thread {
 	
 			for (int i=0; i<listathreads.length; i++){				
 				listathreads[i].join();
-				supersum += listathreads[i].sum;
+			//	supersum += listathreads[i].sum;
 			}
 
-	        long endTime = System.currentTimeMillis();
+	 
 	   
-	        double pi = 4*(supersum) ;
-
-	        System.out.println("Value of pi: " + pi);
-
-	        System.out.println("Calculated in " +
-	                (endTime - startTime) + " milliseconds");
+	        double pi = 4*(total) ;
+	        long endTime = System.nanoTime();
+			double realpi = Math.PI;
+			double error = (pi-realpi)/realpi*100;
+			 System.out.println("Foram criadas "+listathreads.length+" threads \n");
+				System.out.print("valor real de pi:"+realpi+"\n");
+			System.out.print("meu valor de pi:"+pi+"\n");
+			System.out.print("erro:"+error+"\n");
+			System.out.println("Calculo demorou (secs): "  
+				    + String.format("%.6f", (endTime-inicio)/1.0e9) );
 		
 	}
 }

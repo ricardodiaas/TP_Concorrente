@@ -1,3 +1,5 @@
+import java.util.Scanner;
+
 //Gregory lebinz method
 public class lebinzsequencial {
 
@@ -5,13 +7,18 @@ public class lebinzsequencial {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		long inicio = System.nanoTime(); 
-	
+		
+		 Scanner reader = new Scanner(System.in);  // Reading from System.in
+		 System.out.println("Enter the number of iterations: ");
+		 long n = reader.nextLong(); // Scans the next token of the input as an int.
+		 //once finished
+		 reader.close();
+		 long inicio = System.nanoTime(); 
 		double factor=1.0;
 		double sum =0.0;
 		long k;
-		long n = 100000000;
-		
+		//1long n = 100000000;
+	
 		for(k=0;k<n;k++){
 		
 			if(!isPar(k)){
@@ -28,8 +35,11 @@ public class lebinzsequencial {
 			pi =4.0*sum;
 		
 			long fim = System.nanoTime(); 
-			
-		System.out.print(pi+"\n");
+			double realpi = Math.PI;
+		double error =(pi-realpi)/realpi*100;
+			System.out.print("valor real de pi:"+realpi+"\n");
+		System.out.print("meu valor de pi:"+pi+"\n");
+		System.out.print("erro:"+error+"\n");
 		System.out.println("Calculo demorou (secs): "  
 			    + String.format("%.6f", (fim-inicio)/1.0e9) );
 		
