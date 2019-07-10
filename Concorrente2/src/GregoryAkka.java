@@ -1,5 +1,4 @@
 
-
 import akka.actor.ActorRef;
 import akka.actor.UntypedActor;
 import akka.routing.RoundRobinPool;
@@ -40,10 +39,10 @@ public class GregoryAkka {
         }
     }
     @SuppressWarnings("serial")
-	public static class QuantidadeIntervaloMessage implements Serializable {
-    		public final double qnt;
-        public QuantidadeIntervaloMessage(double qnt) {
-    			this.qnt = qnt;
+	public static class PIMessage implements Serializable {
+    		public final double pi;
+        public PIMessage(double pi) {
+    			this.pi = pi;
         }
     }
     
@@ -76,13 +75,13 @@ public class GregoryAkka {
                 }
 
     			//System.out.println("sum "+ sum);
-                System.out.println("sum " + contaRespostas);
+                System.out.println("contagem: " + contaRespostas);
 
     			if (contaRespostas == 0){
                     double pi;
                     pi = 4.0 * (1+sum);
                     System.out.println("PI " + pi);
-                    actorIniciador.tell(new QuantidadeIntervaloMessage(pi), getSelf());
+                    actorIniciador.tell(new PIMessage(pi), getSelf());
                 }
 
             	
@@ -99,7 +98,7 @@ public class GregoryAkka {
         	if (message instanceof CalculaPIcalcMessage) {
         		
         		long num = ((CalculaPIcalcMessage) message).num;
-
+        		System.out.println("PRINT"+num);
         		double f = Calcula(num);
         		getSender().tell(new RespostaPIcalcMessage(f),getSelf());
         		//System.out.println(f);
@@ -151,20 +150,20 @@ public class GregoryAkka {
     		    "router");
     
         // definir tamanho conjunto
-        long N = 10000;
+        long N = 100;
         
         // Ask the 'greeter for the latest 'greeting'
         // Reply should go to the "actor-in-a-box"
         inbox.send(controlador, new CalculaIntervaloMessage( N, PIcalc));
         
         // Wait 5 seconds for the reply with the 'greeting' message
-        QuantidadeIntervaloMessage resposta = (QuantidadeIntervaloMessage) 
+        PIMessage resposta = (PIMessage) 
         		inbox.receive(Duration.create(500, TimeUnit.SECONDS));
         
-        double quantidade = resposta.qnt;
+        double pi = resposta.pi;
 		long fim = System.nanoTime(); 
 		
-        System.out.println("Main: quantidade em "+ N +":"+ quantidade);
+        System.out.println("Valor de pi: "+ pi);
         System.out.println("Calculo demorou (secs): "  
 			    + String.format("%.6f", (fim-ini)/1.0e9) );
 		
